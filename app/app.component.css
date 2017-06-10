@@ -1,0 +1,19 @@
+.header {
+	background-color: #508ebf;
+}
+.main {
+	position: relative;
+	overflow-x: hidden;
+}
+.form-wrapper {
+	position: absolute;
+	right: -400px;
+	top: 0;
+	transition: all 1s linear;
+	height: 200px;
+	border: 1px solid black;
+}
+.form-visible {
+	right: 0;
+	transition: all 1s linear;
+}

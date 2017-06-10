@@ -1,0 +1,4 @@
+.item-holder {
+	display: -webkit-flex;
+    display: flex;
+}

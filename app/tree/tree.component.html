@@ -1,0 +1,39 @@
+<div class="tree" *ngIf="items.length">
+	<div class="item-holder" *ngFor="let item of items">
+		<div class="item">
+			<img src="{{ item.image }}" alt="{{ item.title }}">
+			<p class="title">{{ item.title }}</p>
+			<button class="delete" (click)="delete(item)">-</button>
+			<button class="add" (click)="toggle_form($event)">+</button>			
+			<div class="item-holder" *ngFor="let item of items">
+				<div class="item">
+					<img src="{{ item.image }}" alt="{{ item.title }}">
+					<p class="title">{{ item.title }}</p>
+					<button class="delete" (click)="delete(item)">-</button>
+					<button class="add" (click)="toggle_form($event)">+</button>			
+				</div>
+				<div class="item">
+					<img src="{{ item.image }}" alt="{{ item.title }}">
+					<p class="title">{{ item.title }}</p>
+					<button class="delete" (click)="delete(item)">-</button>
+					<button class="add" (click)="toggle_form($event)">+</button>			
+				
+					<div class="item-holder">
+						<div class="item">
+							<img src="{{ item.image }}" alt="{{ item.title }}">
+							<p class="title">{{ item.title }}</p>
+							<button class="delete" (click)="delete(item)">-</button>
+							<button class="add" (click)="toggle_form($event)">+</button>			
+						</div>
+						<div class="item">
+							<img src="{{ item.image }}" alt="{{ item.title }}">
+							<p class="title">{{ item.title }}</p>
+							<button class="delete" (click)="delete(item)">-</button>
+							<button class="add" (click)="toggle_form($event)">+</button>			
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
