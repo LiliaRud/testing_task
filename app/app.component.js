@@ -9,23 +9,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var item_1 = require('./shared/item');
 var data_1 = require('./shared/data');
-var tree_service_1 = require('./shared/tree.service');
 var AppComponent = (function () {
-    function AppComponent(treeService) {
-        this.treeService = treeService;
+    function AppComponent() {
         this.header = 'Testing task';
         this.form = data_1.form;
+        this.id = 0;
         this.title = '';
         this.image = '';
-        this.children = [];
+        this.parent_id = 0;
+        this.level = 0;
+        this.items = data_1.items;
     }
     AppComponent.prototype.create = function () {
-        this.treeService.createItem(this.title, this.image, this.children);
+        var item = new item_1.Item(this.id, this.title, this.image, this.parent_id, this.level);
+        this.items.push(item);
         data_1.form.visible = false;
+        console.log(this.id, this.title, this.image, this.parent_id, this.level);
     };
-    AppComponent.prototype.toggle_form = function (form) {
-        this.treeService.toggleForm(form);
+    AppComponent.prototype.toggle_form = function (visible) {
+        data_1.form.visible = !data_1.form.visible;
     };
     AppComponent = __decorate([
         core_1.Component({
@@ -34,7 +38,7 @@ var AppComponent = (function () {
             templateUrl: 'app.component.html',
             styleUrls: ['app.component.css']
         }), 
-        __metadata('design:paramtypes', [tree_service_1.TreeService])
+        __metadata('design:paramtypes', [])
     ], AppComponent);
     return AppComponent;
 }());

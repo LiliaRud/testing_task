@@ -1,9 +1,11 @@
 "use strict";
 var Item = (function () {
-    function Item(title, image, children) {
+    function Item(id, title, image, parent_id, level) {
+        this.id = id;
         this.title = title;
         this.image = image;
-        this.children = children;
+        this.parent_id = parent_id;
+        this.level = level;
     }
     return Item;
 }());

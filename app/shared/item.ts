@@ -1,5 +1,7 @@
 export class Item {
-	constructor(public title:string, 
+	constructor(public id:number, 
+				public title:string,
 				public image:string,
-				public children:any) {}
+				public parent_id:number,
+				public level:number) {}
 }

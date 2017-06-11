@@ -14,7 +14,7 @@ var forms_1 = require('@angular/forms');
 var http_1 = require('@angular/http');
 var app_component_1 = require('./app.component');
 var tree_component_1 = require('./tree/tree.component');
-var tree_service_1 = require('./shared/tree.service');
+var item_component_1 = require('./item/item.component');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -27,9 +27,9 @@ var AppModule = (function () {
             ],
             declarations: [
                 app_component_1.AppComponent,
-                tree_component_1.TreeComponent
+                tree_component_1.TreeComponent,
+                item_component_1.ItemComponent
             ],
-            providers: [tree_service_1.TreeService],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])

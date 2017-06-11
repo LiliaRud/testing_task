@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+
+import { ItemComponent } from '../item/item.component';
 
 import { Item } from '../shared/item';
 import { items } from '../shared/data';
-import { TreeService } from '../shared/tree.service';
-
 
 @Component({
 	moduleId: module.id,
@@ -12,20 +12,22 @@ import { TreeService } from '../shared/tree.service';
 	styleUrls: ['tree.component.css']
 })
 
-export class TreeComponent implements OnInit {
-	items:Item[];
+export class TreeComponent {
+	items = items;
 	
-	constructor(private treeService:TreeService) {
-		this.items = [];
+	deleteItem(item:Item) {
+		let index = this.items.indexOf(item);
+		if (index > -1) {
+			this.items.splice(index, 1)
+		}
 	}
 
-	ngOnInit() {
-		this.items = this.treeService.getItems();
-	}
-	delete(item:Item) {
-		this.treeService.deleteItem(item);
-	}
-	toggle_form(form:any) {
-		this.treeService.toggleForm(form);
+	getMaxOfArray(items:Item[]) {
+		let levels = []
+		for (let item of items) {
+			levels.push(item.level)
+		}
+	    var max_level:number = Math.max.apply(null, levels);
+	    console.log(max_level)
 	}
 }

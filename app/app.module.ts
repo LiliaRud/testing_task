@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { TreeComponent } from './tree/tree.component';
-import { TreeService } from './shared/tree.service';
+import { ItemComponent } from './item/item.component';
 
 @NgModule({
 	imports: [
@@ -15,9 +15,9 @@ import { TreeService } from './shared/tree.service';
 	],
 	declarations: [
 		AppComponent, 
-		TreeComponent
+		TreeComponent,
+		ItemComponent
 	],
-	providers: [TreeService],
 	bootstrap: [AppComponent]
 })
 

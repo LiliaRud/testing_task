@@ -1,9 +1,7 @@
-import {  Component, Output, OnInit, EventEmitter  } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 
 import { Item } from './shared/item';
 import { items, form } from './shared/data';
-import { TreeService } from './shared/tree.service';
-
 
 @Component({
 	moduleId: module.id,
@@ -13,18 +11,24 @@ import { TreeService } from './shared/tree.service';
 })
 
 export class AppComponent {
+
 	header:string = 'Testing task';
 	form = form;
+	id:number = 0;
 	title:string = '';
 	image:string = '';
-	children:any = [];
+	parent_id:number = 0;
+	level:number = 0;
+	items = items;
 	
-	constructor(private treeService:TreeService) {}
-	create() {
-		this.treeService.createItem(this.title, this.image, this.children);
-		form.visible = false;
+	create() {		
+		let item = new Item(this.id, this.title, this.image, this.parent_id, this.level);
+	 	this.items.push(item);
+	 	form.visible = false;
+	 	console.log(this.id, this.title, this.image, this.parent_id, this.level)
 	}
-	toggle_form(form:any) {
-		this.treeService.toggleForm(form);
+
+	toggle_form(visible:boolean) {
+		form.visible = !form.visible;
 	}
 }

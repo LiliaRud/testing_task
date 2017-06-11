@@ -9,20 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var tree_service_1 = require('../shared/tree.service');
+var data_1 = require('../shared/data');
 var TreeComponent = (function () {
-    function TreeComponent(treeService) {
-        this.treeService = treeService;
-        this.items = [];
+    function TreeComponent() {
+        this.items = data_1.items;
     }
-    TreeComponent.prototype.ngOnInit = function () {
-        this.items = this.treeService.getItems();
+    TreeComponent.prototype.deleteItem = function (item) {
+        var index = this.items.indexOf(item);
+        if (index > -1) {
+            this.items.splice(index, 1);
+        }
     };
-    TreeComponent.prototype.delete = function (item) {
-        this.treeService.deleteItem(item);
-    };
-    TreeComponent.prototype.toggle_form = function (form) {
-        this.treeService.toggleForm(form);
+    TreeComponent.prototype.getMaxOfArray = function (items) {
+        var levels = [];
+        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
+            var item = items_1[_i];
+            levels.push(item.level);
+        }
+        var max_level = Math.max.apply(null, levels);
+        console.log(max_level);
     };
     TreeComponent = __decorate([
         core_1.Component({
@@ -31,7 +36,7 @@ var TreeComponent = (function () {
             templateUrl: 'tree.component.html',
             styleUrls: ['tree.component.css']
         }), 
-        __metadata('design:paramtypes', [tree_service_1.TreeService])
+        __metadata('design:paramtypes', [])
     ], TreeComponent);
     return TreeComponent;
 }());
