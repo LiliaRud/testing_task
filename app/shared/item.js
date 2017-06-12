@@ -1,9 +1,8 @@
 "use strict";
 var Item = (function () {
-    function Item(id, title, image, parent_id, level) {
-        this.id = id;
+    function Item(item_id, title, parent_id, level) {
+        this.item_id = item_id;
         this.title = title;
-        this.image = image;
         this.parent_id = parent_id;
         this.level = level;
     }

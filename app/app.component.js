@@ -14,22 +14,20 @@ var data_1 = require('./shared/data');
 var AppComponent = (function () {
     function AppComponent() {
         this.header = 'Testing task';
-        this.form = data_1.form;
-        this.id = 0;
         this.title = '';
-        this.image = '';
-        this.parent_id = 0;
-        this.level = 0;
+        this.parent_id = '';
+        this.level = '';
+        this.form = data_1.form;
         this.items = data_1.items;
     }
     AppComponent.prototype.create = function () {
-        var item = new item_1.Item(this.id, this.title, this.image, this.parent_id, this.level);
+        var item_id = data_1.items[data_1.items.length - 1]['item_id'] + 1;
+        var parent_id = document.getElementById('parent_id').getAttribute('value');
+        var level = document.getElementById('level').getAttribute('value');
+        var item = new item_1.Item(item_id, this.title, parent_id, level);
         this.items.push(item);
         data_1.form.visible = false;
-        console.log(this.id, this.title, this.image, this.parent_id, this.level);
-    };
-    AppComponent.prototype.toggle_form = function (visible) {
-        data_1.form.visible = !data_1.form.visible;
+        console.log(item_id, this.title, parent_id, level);
     };
     AppComponent = __decorate([
         core_1.Component({

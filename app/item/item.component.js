@@ -10,25 +10,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var item_1 = require('../shared/item');
-var data_1 = require('../shared/data');
 var ItemComponent = (function () {
     function ItemComponent(elRef) {
         this.elRef = elRef;
+        this.toggle_form = new core_1.EventEmitter();
+        this.delete = new core_1.EventEmitter();
     }
-    ItemComponent.prototype.toggle_form = function (visible) {
-        data_1.form.visible = !data_1.form.visible;
+    ItemComponent.prototype.onToggleForm = function () {
+        this.toggle_form.emit();
         this.getAttributes();
+    };
+    ItemComponent.prototype.onDelete = function () {
+        this.delete.emit();
     };
     ItemComponent.prototype.getAttributes = function () {
         var element = this.elRef.nativeElement.querySelector('.add');
-        var level = element.getAttribute('data-level');
-        var parent = element.getAttribute('data-parent');
+        var level = "" + (+element.getAttribute('data-level') + 1);
+        var parent = element.getAttribute('data-id');
         console.log('level = ', level, 'parent = ', parent);
+        document.getElementById('parent_id').setAttribute('value', parent);
+        document.getElementById('level').setAttribute('value', level);
     };
     __decorate([
         core_1.Input(), 
         __metadata('design:type', item_1.Item)
     ], ItemComponent.prototype, "item", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], ItemComponent.prototype, "toggle_form", void 0);
+    __decorate([
+        core_1.Output(), 
+        __metadata('design:type', Object)
+    ], ItemComponent.prototype, "delete", void 0);
     ItemComponent = __decorate([
         core_1.Component({
             moduleId: module.id,

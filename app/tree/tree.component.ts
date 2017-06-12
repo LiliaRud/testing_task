@@ -1,9 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
-
-import { ItemComponent } from '../item/item.component';
+import {  Component } from '@angular/core';
 
 import { Item } from '../shared/item';
-import { items } from '../shared/data';
+import { items, form } from '../shared/data';
 
 @Component({
 	moduleId: module.id,
@@ -14,20 +12,16 @@ import { items } from '../shared/data';
 
 export class TreeComponent {
 	items = items;
-	
-	deleteItem(item:Item) {
+	form=form
+
+	delete(item:Item) {
 		let index = this.items.indexOf(item);
 		if (index > -1) {
 			this.items.splice(index, 1)
 		}
 	}
 
-	getMaxOfArray(items:Item[]) {
-		let levels = []
-		for (let item of items) {
-			levels.push(item.level)
-		}
-	    var max_level:number = Math.max.apply(null, levels);
-	    console.log(max_level)
+	toggle_form(visible:boolean) {
+		form.visible = !form.visible;
 	}
 }

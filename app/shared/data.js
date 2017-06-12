@@ -4,25 +4,23 @@ exports.form = {
 };
 exports.items = [
     {
-        id: 1,
+        item_id: 1,
         title: 'title',
-        image: './images/test.jpg',
-        parent_id: 0,
-        level: 1
+        // image: './images/test.jpg',
+        parent_id: '0',
+        level: '1'
     },
     {
-        id: 2,
+        item_id: 2,
         title: 'child1',
-        image: './images/test.jpg',
-        parent_id: 1,
-        level: 2
+        parent_id: '1',
+        level: '2'
     },
     {
-        id: 3,
+        item_id: 3,
         title: 'child2',
-        image: './images/test.jpg',
-        parent_id: 1,
-        level: 2
+        parent_id: '1',
+        level: '2'
     }
 ];
 //# sourceMappingURL=data.js.map

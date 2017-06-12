@@ -13,21 +13,16 @@ var data_1 = require('../shared/data');
 var TreeComponent = (function () {
     function TreeComponent() {
         this.items = data_1.items;
+        this.form = data_1.form;
     }
-    TreeComponent.prototype.deleteItem = function (item) {
+    TreeComponent.prototype.delete = function (item) {
         var index = this.items.indexOf(item);
         if (index > -1) {
             this.items.splice(index, 1);
         }
     };
-    TreeComponent.prototype.getMaxOfArray = function (items) {
-        var levels = [];
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var item = items_1[_i];
-            levels.push(item.level);
-        }
-        var max_level = Math.max.apply(null, levels);
-        console.log(max_level);
+    TreeComponent.prototype.toggle_form = function (visible) {
+        data_1.form.visible = !data_1.form.visible;
     };
     TreeComponent = __decorate([
         core_1.Component({

@@ -1,7 +1,7 @@
-import {  Component, Input, ElementRef } from '@angular/core';
+import {  Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 import { Item } from '../shared/item';
-import { items, form } from '../shared/data';
+import { items } from '../shared/data';
 
 @Component({
 	moduleId: module.id,
@@ -12,18 +12,28 @@ import { items, form } from '../shared/data';
 
 export class ItemComponent {
     @Input() item: Item;
+    @Output() toggle_form = new EventEmitter();
+    @Output() delete = new EventEmitter();
 	
-	constructor(private elRef:ElementRef) {}
+    constructor(private elRef:ElementRef) {}
 
-	toggle_form(visible:boolean) {
-		form.visible = !form.visible;
+	onToggleForm() {
+		this.toggle_form.emit();
 		this.getAttributes()
+	}
+
+	onDelete() {
+		this.delete.emit();
 	}
 
 	getAttributes() {
 		let element = this.elRef.nativeElement.querySelector('.add');
-	 	var level = element.getAttribute('data-level');
-	 	var parent = element.getAttribute('data-parent');
-	 	console.log('level = ', level, 'parent = ', parent)
-	}
+	 	let level = ""+(+element.getAttribute('data-level') + 1);
+	 	let parent = element.getAttribute('data-id');
+
+	 	console.log('level = ', level, 'parent = ', parent);
+
+	    document.getElementById('parent_id').setAttribute('value', parent);
+	 	document.getElementById('level').setAttribute('value', level);
+	}	
 }

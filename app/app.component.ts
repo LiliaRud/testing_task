@@ -1,4 +1,4 @@
-import {  Component, OnInit } from '@angular/core';
+import {  Component } from '@angular/core';
 
 import { Item } from './shared/item';
 import { items, form } from './shared/data';
@@ -13,22 +13,29 @@ import { items, form } from './shared/data';
 export class AppComponent {
 
 	header:string = 'Testing task';
-	form = form;
-	id:number = 0;
 	title:string = '';
-	image:string = '';
-	parent_id:number = 0;
-	level:number = 0;
+	parent_id:string = '';
+	level:string = '';
+	form = form;
 	items = items;
-	
-	create() {		
-		let item = new Item(this.id, this.title, this.image, this.parent_id, this.level);
+			
+	create() {	
+		let item_id = items[items.length - 1]['item_id'] + 1;
+		let parent_id = document.getElementById('parent_id').getAttribute('value')	
+		let level = document.getElementById('level').getAttribute('value')	
+		let item = new Item(item_id, this.title, parent_id, level);
 	 	this.items.push(item);
 	 	form.visible = false;
-	 	console.log(this.id, this.title, this.image, this.parent_id, this.level)
+	 	
+	 	console.log(item_id, this.title, parent_id, level)
 	}
 
-	toggle_form(visible:boolean) {
-		form.visible = !form.visible;
-	}
+	// getMaxOfArray(items:Item[]) {
+	// 	let levels:any = []
+	// 	for (let item of items) {
+	// 		levels.push(item.level)
+	// 	}
+	//     var max_level:number = Math.max.apply(null, levels);
+	//     console.log(max_level)
+	// }
 }

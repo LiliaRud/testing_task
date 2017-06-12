@@ -1,7 +1,7 @@
 <div class="tree" *ngIf="items.length">
 	<div *ngFor="let item of items">
 		<!-- <div class="item-holder" *ngIf="item.level == '1'"> -->
-			<item [item]="item"></item>
+			<item [item]="item" (toggle_form)="toggle_form()" (delete)="delete(item)"></item>
 		<!-- </div> -->
 	</div>	
 </div>
