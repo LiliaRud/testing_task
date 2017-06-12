@@ -1,7 +1,7 @@
 import {  Component } from '@angular/core';
 
 import { Item } from '../shared/item';
-import { items, form } from '../shared/data';
+import { items, form, max_level } from '../shared/data';
 
 @Component({
 	moduleId: module.id,
