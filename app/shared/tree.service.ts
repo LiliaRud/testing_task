@@ -1,59 +1,60 @@
-// import { Injectable } from '@angular/core';
-// import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 
-// import { items, form } from './data';
-// import { Item } from './item';
+import { items, form } from './data';
+import { Item } from './item';
 
-// var isRoot:boolean = true;
+@Injectable()
+export class TreeService {
+	items:any = items;
 
-// @Injectable()
-// export class TreeService {
-// 	items:Item[] = items;
-// 	isRoot = isRoot;
+	constructor(private http:Http) {}
 
-// 	constructor(private http:Http) {}
+	getItems() {
+		return this.items;
+	}
 
-// 	getItems():Item[] {
-// 		return this.items;
-// 	}
+	createItem(title:string) {	
+		let parent_id = document.getElementById('parent_id').getAttribute('value')	
+		let level = document.getElementById('level').getAttribute('value')	
+		
+		let items_ids:any = [];
+		for (let item of this.items) {
+			for (let i of item) {
+				items_ids.push(i.item_id);
+			}
+		}
+		items_ids.sort();
+		let item_id = items_ids[items_ids.length - 1] + 1;
 
-// 	// createItem(title:string, image:string) {
-// 	// 	let item = new Item(title, image);
-// 	// 	if (isRoot == true) {
-// 	// 	 	this.items.push(item);
-// 	// 	} else {
-// 	// 		console.log('PUSHH')
-// 	// 	}
-// 	// }
+		let item = new Item(item_id, title, parent_id, level);
 
-// 	createItem(id:number, title:string, image:string, parent_id:number, level:number) {
-// 		let item = new Item(id, title, image, parent_id, level);
-// 	 	this.items.push(item);
-// 	}
+		console.log(item)
 
-// 	deleteItem(item:Item) {
-// 		let index = this.items.indexOf(item);
-// 		if (index > -1) {
-// 			this.items.splice(index, 1)
-// 		};
-// 	}
+		if (+level-1 < items.length) {
+			this.items[+level-1].push(item);
+		} else {
+			this.items.push([item]);
+		}
+	 	
+	 	form.visible = false;
+	}
 
-// 	// toggleForm(visible:boolean) {
-// 	// 	form.visible = !form.visible;
-// 	// 	var target = event.target;
-// 	// 	var rootAdd = document.getElementById('root-add');
-// 	// 	if (target != rootAdd) {
-// 	// 		isRoot = false;
-// 	// 		console.log(target)
-// 	// 		console.log(isRoot)
-// 	// 	} else {
-// 	// 		isRoot = true;
-// 	// 		console.log('ROOT')
-// 	// 		console.log(target)
-// 	// 		console.log(isRoot)
-// 	// 	}
-// 	// }
-// 	toggleForm(visible:boolean) {
-// 		form.visible = !form.visible;
-// 	}
-// }
+	deleteItem(item:any) {
+		let index_level = +item.level;
+		let index = this.items[index_level - 1].indexOf(item);
+		
+		if (this.items[index_level - 1] != items[items.length - 1]) {
+			let child_index:any = [];
+			for (let sub_i of this.items[index_level]) {
+				if (sub_i.parent_id == item.item_id) {
+					child_index.push(this.items[index_level].indexOf(sub_i));
+				}
+			}
+			for (let children of child_index) {
+				this.items[index_level].splice(0, 1)
+			}
+		}
+		this.items[index_level - 1].splice(index, 1)
+	}
+}

@@ -22,10 +22,6 @@ export class ItemComponent {
 		this.getAttributes()
 	}
 
-	onDelete() {
-		this.delete.emit();
-	}
-
 	getAttributes() {
 		let element = this.elRef.nativeElement.querySelector('.add');
 	 	let level = ""+(+element.getAttribute('data-level') + 1);
@@ -36,4 +32,8 @@ export class ItemComponent {
 	    document.getElementById('parent_id').setAttribute('value', parent);
 	 	document.getElementById('level').setAttribute('value', level);
 	}	
+	
+	onDelete() {
+		this.delete.emit();
+	}
 }

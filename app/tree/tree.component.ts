@@ -1,7 +1,9 @@
-import {  Component } from '@angular/core';
+import {  Component, OnInit } from '@angular/core';
 
 import { Item } from '../shared/item';
 import { items, form } from '../shared/data';
+
+import { TreeService } from '../shared/tree.service'
 
 @Component({
 	moduleId: module.id,
@@ -10,26 +12,20 @@ import { items, form } from '../shared/data';
 	styleUrls: ['tree.component.css']
 })
 
-export class TreeComponent {
-	items = items;
+export class TreeComponent implements OnInit {
+	items:any;
 	form = form
 
+	constructor(private teeService: TreeService) {
+		this.items = [];
+	}
+
+	ngOnInit() {
+		this.items = this.teeService.getItems();
+	}
+
 	delete(item:any) {
-		let index_level = +item.level;
-		let index = this.items[index_level - 1].indexOf(item);
-		
-		if (this.items[index_level - 1] != items[items.length - 1]) {
-			let child_index:any = [];
-			for (let sub_i of this.items[index_level]) {
-				if (sub_i.parent_id == item.item_id) {
-					child_index.push(this.items[index_level].indexOf(sub_i));
-				}
-			}
-			for (let children of child_index) {
-				this.items[index_level].splice(0, 1)
-			}
-		}
-		this.items[index_level - 1].splice(index, 1)
+		this.teeService.deleteItem(item);
 	}
 
 	toggle_form(visible:boolean) {

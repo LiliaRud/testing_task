@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { TreeComponent } from './tree/tree.component';
 import { ItemComponent } from './item/item.component';
 
+import { TreeService } from './shared/tree.service'
+
 @NgModule({
 	imports: [
 		BrowserModule, 
@@ -18,6 +20,7 @@ import { ItemComponent } from './item/item.component';
 		TreeComponent,
 		ItemComponent
 	],
+	providers: [TreeService],
 	bootstrap: [AppComponent]
 })
 

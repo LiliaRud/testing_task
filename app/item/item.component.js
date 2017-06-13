@@ -20,9 +20,6 @@ var ItemComponent = (function () {
         this.toggle_form.emit();
         this.getAttributes();
     };
-    ItemComponent.prototype.onDelete = function () {
-        this.delete.emit();
-    };
     ItemComponent.prototype.getAttributes = function () {
         var element = this.elRef.nativeElement.querySelector('.add');
         var level = "" + (+element.getAttribute('data-level') + 1);
@@ -30,6 +27,9 @@ var ItemComponent = (function () {
         console.log('level = ', level, 'parent = ', parent);
         document.getElementById('parent_id').setAttribute('value', parent);
         document.getElementById('level').setAttribute('value', level);
+    };
+    ItemComponent.prototype.onDelete = function () {
+        this.delete.emit();
     };
     __decorate([
         core_1.Input(), 
