@@ -16,10 +16,22 @@ var TreeComponent = (function () {
         this.form = data_1.form;
     }
     TreeComponent.prototype.delete = function (item) {
-        var index = this.items.indexOf(item);
-        if (index > -1) {
-            this.items.splice(index, 1);
+        var index_level = +item.level;
+        var index = this.items[index_level - 1].indexOf(item);
+        if (this.items[index_level - 1] != data_1.items[data_1.items.length - 1]) {
+            var child_index = [];
+            for (var _i = 0, _a = this.items[index_level]; _i < _a.length; _i++) {
+                var sub_i = _a[_i];
+                if (sub_i.parent_id == item.item_id) {
+                    child_index.push(this.items[index_level].indexOf(sub_i));
+                }
+            }
+            for (var _b = 0, child_index_1 = child_index; _b < child_index_1.length; _b++) {
+                var children = child_index_1[_b];
+                this.items[index_level].splice(0, 1);
+            }
         }
+        this.items[index_level - 1].splice(index, 1);
     };
     TreeComponent.prototype.toggle_form = function (visible) {
         data_1.form.visible = !data_1.form.visible;

@@ -20,39 +20,28 @@ var AppComponent = (function () {
         this.form = data_1.form;
         this.items = data_1.items;
     }
-    AppComponent.prototype.ngOnInit = function () {
-        this.getMaxOfLevels(data_1.items);
-    };
     AppComponent.prototype.create = function () {
         var parent_id = document.getElementById('parent_id').getAttribute('value');
         var level = document.getElementById('level').getAttribute('value');
-        //let item_id = items[+level-1][items.length - 1]['item_id'] + 1;
-        var item_id = 1;
+        var items_ids = [];
+        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
+            var item_2 = _a[_i];
+            for (var _b = 0, item_3 = item_2; _b < item_3.length; _b++) {
+                var i = item_3[_b];
+                items_ids.push(i.item_id);
+            }
+        }
+        items_ids.sort();
+        var item_id = items_ids[items_ids.length - 1] + 1;
         var item = new item_1.Item(item_id, this.title, parent_id, level);
+        console.log(item);
         if (+level - 1 < data_1.items.length) {
             this.items[+level - 1].push(item);
         }
         else {
             this.items.push([item]);
         }
-        this.getMaxOfLevels(data_1.items);
         data_1.form.visible = false;
-        console.log(item_id, this.title, parent_id, level);
-    };
-    AppComponent.prototype.getMaxOfLevels = function (items) {
-        var levels = [];
-        for (var _i = 0, items_1 = items; _i < items_1.length; _i++) {
-            var item = items_1[_i];
-            levels.push(item.level);
-        }
-        function onlyUnique(value, index, self) {
-            return self.indexOf(value) === index;
-        }
-        ;
-        var ll = levels.filter(onlyUnique);
-        var max_level = ll;
-        //this.max_level = Math.max.apply(null, levels);
-        console.log(max_level);
     };
     AppComponent = __decorate([
         core_1.Component({
