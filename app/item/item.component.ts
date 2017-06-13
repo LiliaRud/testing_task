@@ -1,7 +1,6 @@
 import {  Component, Input, Output, EventEmitter, ElementRef } from '@angular/core';
 
 import { Item } from '../shared/item';
-import { items } from '../shared/data';
 
 @Component({
 	moduleId: module.id,
@@ -25,12 +24,10 @@ export class ItemComponent {
 	getAttributes() {
 		let element = this.elRef.nativeElement.querySelector('.add');
 	 	let level = ""+(+element.getAttribute('data-level') + 1);
-	 	let parent = element.getAttribute('data-id');
+	 	let parent = ""+element.getAttribute('data-id');
 
-	 	console.log('level = ', level, 'parent = ', parent);
-
-	    document.getElementById('parent_id').setAttribute('value', parent);
-	 	document.getElementById('level').setAttribute('value', level);
+	    document.getElementById('parent-input').setAttribute('value', parent);
+	 	document.getElementById('level-input').setAttribute('value', level);
 	}	
 	
 	onDelete() {

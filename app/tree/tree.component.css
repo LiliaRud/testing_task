@@ -12,3 +12,8 @@
 	border: 1px solid blue;
 	background-color: #fff;
 }
+.item>img {
+	height: 100px;
+	width: auto;
+	float: right;
+}

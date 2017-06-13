@@ -9,22 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var data_1 = require('../shared/data');
+var item_1 = require('../shared/item');
 var tree_service_1 = require('../shared/tree.service');
 var TreeComponent = (function () {
     function TreeComponent(teeService) {
         this.teeService = teeService;
-        this.form = data_1.form;
+        this.form = item_1.form;
         this.items = [];
     }
     TreeComponent.prototype.ngOnInit = function () {
-        this.items = this.teeService.getItems();
+        var _this = this;
+        this.teeService.getItems().subscribe(function (items) { return _this.items = items; });
     };
     TreeComponent.prototype.delete = function (item) {
         this.teeService.deleteItem(item);
     };
     TreeComponent.prototype.toggle_form = function (visible) {
-        data_1.form.visible = !data_1.form.visible;
+        item_1.form.visible = !item_1.form.visible;
     };
     TreeComponent = __decorate([
         core_1.Component({

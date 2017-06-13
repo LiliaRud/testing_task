@@ -23,10 +23,9 @@ var ItemComponent = (function () {
     ItemComponent.prototype.getAttributes = function () {
         var element = this.elRef.nativeElement.querySelector('.add');
         var level = "" + (+element.getAttribute('data-level') + 1);
-        var parent = element.getAttribute('data-id');
-        console.log('level = ', level, 'parent = ', parent);
-        document.getElementById('parent_id').setAttribute('value', parent);
-        document.getElementById('level').setAttribute('value', level);
+        var parent = "" + element.getAttribute('data-id');
+        document.getElementById('parent-input').setAttribute('value', parent);
+        document.getElementById('level-input').setAttribute('value', level);
     };
     ItemComponent.prototype.onDelete = function () {
         this.delete.emit();

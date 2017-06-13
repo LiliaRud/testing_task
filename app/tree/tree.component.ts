@@ -1,7 +1,6 @@
 import {  Component, OnInit } from '@angular/core';
 
-import { Item } from '../shared/item';
-import { items, form } from '../shared/data';
+import { Item, form } from '../shared/item';
 
 import { TreeService } from '../shared/tree.service'
 
@@ -21,7 +20,7 @@ export class TreeComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.items = this.teeService.getItems();
+		this.teeService.getItems().subscribe(items => this.items = items);
 	}
 
 	delete(item:any) {

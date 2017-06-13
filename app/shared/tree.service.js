@@ -10,56 +10,80 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var http_1 = require('@angular/http');
-var data_1 = require('./data');
+var Observable_1 = require('rxjs/Observable');
+require('rxjs/add/operator/map');
+require('rxjs/add/operator/catch');
+require('rxjs/add/observable/throw');
 var item_1 = require('./item');
 var TreeService = (function () {
     function TreeService(http) {
         this.http = http;
-        this.items = data_1.items;
+        this.items = [];
+        this.apiUrl = 'api/items';
+        this.apiUrlGo = 'http://localhost:3050/getTree';
     }
     TreeService.prototype.getItems = function () {
-        return this.items;
+        var _this = this;
+        return this.http.get(this.apiUrl)
+            .map(function (res) { return _this.items = res.json().data; })
+            .catch(this.handleError);
     };
-    TreeService.prototype.createItem = function (title) {
-        var parent_id = document.getElementById('parent_id').getAttribute('value');
-        var level = document.getElementById('level').getAttribute('value');
-        var items_ids = [];
-        for (var _i = 0, _a = this.items; _i < _a.length; _i++) {
-            var item_2 = _a[_i];
-            for (var _b = 0, item_3 = item_2; _b < item_3.length; _b++) {
-                var i = item_3[_b];
-                items_ids.push(i.item_id);
-            }
-        }
-        items_ids.sort();
-        var item_id = items_ids[items_ids.length - 1] + 1;
-        var item = new item_1.Item(item_id, title, parent_id, level);
-        console.log(item);
-        if (+level - 1 < data_1.items.length) {
-            this.items[+level - 1].push(item);
+    TreeService.prototype.createItem = function (title, image) {
+        var _this = this;
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        var parent_id = +(document.getElementById('parent-input').getAttribute('value'));
+        var level = +(document.getElementById('level-input').getAttribute('value'));
+        var item = new item_1.Item(title, image, parent_id, level);
+        if (+level - 1 < this.items.length) {
+            this.http.post(this.apiUrl, item, options)
+                .map(function (res) { return res.json().data; })
+                .map(function (item) { return _this.items[+level - 1].push(item); })
+                .catch(this.handleError)
+                .subscribe();
         }
         else {
-            this.items.push([item]);
+            this.http.post(this.apiUrl, item, options)
+                .map(function (res) { return res.json().data; })
+                .map(function (item) { return _this.items.push([item]); })
+                .catch(this.handleError)
+                .subscribe();
         }
-        data_1.form.visible = false;
+        item_1.form.visible = false;
     };
     TreeService.prototype.deleteItem = function (item) {
-        var index_level = +item.level;
-        var index = this.items[index_level - 1].indexOf(item);
-        if (this.items[index_level - 1] != data_1.items[data_1.items.length - 1]) {
-            var child_index = [];
-            for (var _i = 0, _a = this.items[index_level]; _i < _a.length; _i++) {
-                var sub_i = _a[_i];
-                if (sub_i.parent_id == item.item_id) {
-                    child_index.push(this.items[index_level].indexOf(sub_i));
+        var _this = this;
+        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
+        var options = new http_1.RequestOptions({ headers: headers });
+        var url = this.apiUrl + "/" + item.id;
+        this.http.delete(url, options)
+            .map(function (res) {
+            var index_level = +item.level;
+            var index = _this.items[index_level - 1].indexOf(item);
+            if (_this.items[index_level - 1] != _this.items[_this.items.length - 1]) {
+                var child_index = [];
+                for (var _i = 0, _a = _this.items; _i < _a.length; _i++) {
+                    var sub_item = _a[_i];
+                    for (var _b = 0, sub_item_1 = sub_item; _b < sub_item_1.length; _b++) {
+                        var i = sub_item_1[_b];
+                        if (i.parent_id == item.id) {
+                            child_index.push(sub_item.indexOf(i));
+                        }
+                    }
+                }
+                for (var _c = 0, child_index_1 = child_index; _c < child_index_1.length; _c++) {
+                    var children = child_index_1[_c];
+                    _this.items[index_level].splice(0, 1);
                 }
             }
-            for (var _b = 0, child_index_1 = child_index; _b < child_index_1.length; _b++) {
-                var children = child_index_1[_b];
-                this.items[index_level].splice(0, 1);
-            }
-        }
-        this.items[index_level - 1].splice(index, 1);
+            _this.items[index_level - 1].splice(index, 1);
+        })
+            .catch(this.handleError)
+            .subscribe();
+    };
+    TreeService.prototype.handleError = function (error) {
+        console.log('Error', error);
+        return Observable_1.Observable.throw(error.message || error);
     };
     TreeService = __decorate([
         core_1.Injectable(), 

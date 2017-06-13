@@ -1,6 +1,12 @@
 export class Item {
-	constructor(public item_id:number,
-				public title:string,
-				public parent_id:string,
-				public level:string) {}
-}
+	id: number;
+
+	constructor(public title:string,
+				public image:any,
+				public parent_id:number,
+				public level:number) {}
+};
+
+export const form = {
+	visible: false,
+};

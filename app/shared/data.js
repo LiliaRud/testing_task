@@ -1,7 +1,4 @@
 "use strict";
-exports.form = {
-    visible: false,
-};
 exports.items = [
     [
         {

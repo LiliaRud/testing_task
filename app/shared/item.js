@@ -1,12 +1,16 @@
 "use strict";
 var Item = (function () {
-    function Item(item_id, title, parent_id, level) {
-        this.item_id = item_id;
+    function Item(title, image, parent_id, level) {
         this.title = title;
+        this.image = image;
         this.parent_id = parent_id;
         this.level = level;
     }
     return Item;
 }());
 exports.Item = Item;
+;
+exports.form = {
+    visible: false,
+};
 //# sourceMappingURL=item.js.map

@@ -11,12 +11,12 @@
 				<label for="title-input">Add title</label>
 				<input type="text" name="title" class="form-control" id="title-input" placeholder="Add title" required [(ngModel)]="title">
 			</div>
-			<!-- <div class="form-group">
+			<div class="form-group">
 				<label for="image-input">Add image</label>
-				<input type="text" name="image" id="image-input" placeholder="Add image" required [(ngModel)]="image">
-			</div>  -->
-			<input type="hidden" name="parent_id" id="parent_id" required>
-			<input type="hidden" name="level" id="level" required>
+				<input type="file" name="image" id="image-input" placeholder="Add image" [(ngModel)]="image">
+			</div> 
+			<input type="hidden" name="parent_id" id="parent-input" required>
+			<input type="hidden" name="level" id="level-input" required>
 			<input type="submit" class="btn btn-default">
 		</form>
 	</div>

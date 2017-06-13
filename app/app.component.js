@@ -9,17 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var data_1 = require('./shared/data');
+var item_1 = require('./shared/item');
 var tree_service_1 = require('./shared/tree.service');
 var AppComponent = (function () {
     function AppComponent(teeService) {
         this.teeService = teeService;
         this.header = 'Testing task';
-        this.form = data_1.form;
-        this.title = '';
+        this.form = item_1.form;
     }
     AppComponent.prototype.create = function () {
-        this.teeService.createItem(this.title);
+        this.teeService.createItem(this.title, this.image);
     };
     AppComponent = __decorate([
         core_1.Component({

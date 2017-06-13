@@ -1,7 +1,6 @@
-import {  Component } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { Item } from './shared/item';
-import { items, form } from './shared/data';
+import { Item, form } from './shared/item';
 
 import { TreeService } from './shared/tree.service'
 
@@ -15,11 +14,12 @@ import { TreeService } from './shared/tree.service'
 export class AppComponent {
 	header:string = 'Testing task';
 	form = form;
-	title = '';
+	title:string;
+	image:any;
 
 	constructor(private teeService: TreeService) {}
 
 	create() {
-		this.teeService.createItem(this.title);
+		this.teeService.createItem(this.title, this.image);
 	}
 }
