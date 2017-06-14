@@ -1,5 +1,5 @@
-<div class="tree" *ngIf="items.length">
-	<div class="level-holder" *ngFor="let i of items">
+<div class="tree" *ngIf="tree.length">
+	<div class="level-holder" *ngFor="let i of tree">
 		<div class="item-holder" *ngFor="let item of i">
 			<item  [item]="item" (toggle_form)="toggle_form()" (delete)="delete(item)"></item>
 		</div>		

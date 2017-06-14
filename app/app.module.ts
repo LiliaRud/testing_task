@@ -17,7 +17,7 @@ import { TreeService } from './shared/tree.service'
 		BrowserModule,
 		FormsModule,
 		HttpModule,
-		InMemoryWebApiModule.forRoot(InMemoryDataService)
+		//InMemoryWebApiModule.forRoot(InMemoryDataService)
 	],
 	declarations: [
 		AppComponent, 

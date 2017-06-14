@@ -18,14 +18,15 @@ var item_1 = require('./item');
 var TreeService = (function () {
     function TreeService(http) {
         this.http = http;
-        this.items = [];
-        this.apiUrl = 'api/items';
-        this.apiUrlGo = 'http://localhost:3050/getTree';
+        this.tree = [];
+        this.apiUrl = 'api/tree';
+        this.apiUrlGo = 'http://localhost:3050';
     }
     TreeService.prototype.getItems = function () {
         var _this = this;
-        return this.http.get(this.apiUrl)
-            .map(function (res) { return _this.items = res.json().data; })
+        return this.http.get(this.apiUrlGo + "/getTree")
+            .map(function (res) { return res.json().result; })
+            .map(function (item) { return _this.tree = item; })
             .catch(this.handleError);
     };
     TreeService.prototype.createItem = function (title, image) {
@@ -35,17 +36,17 @@ var TreeService = (function () {
         var parent_id = +(document.getElementById('parent-input').getAttribute('value'));
         var level = +(document.getElementById('level-input').getAttribute('value'));
         var item = new item_1.Item(title, image, parent_id, level);
-        if (+level - 1 < this.items.length) {
-            this.http.post(this.apiUrl, item, options)
-                .map(function (res) { return res.json().data; })
-                .map(function (item) { return _this.items[+level - 1].push(item); })
+        if (+level - 1 < this.tree.length) {
+            this.http.post(this.apiUrlGo + "/addNode", item, options)
+                .map(function (res) { return res.json().result; })
+                .map(function (item) { return _this.tree[+level - 1].push(item); })
                 .catch(this.handleError)
                 .subscribe();
         }
         else {
-            this.http.post(this.apiUrl, item, options)
-                .map(function (res) { return res.json().data; })
-                .map(function (item) { return _this.items.push([item]); })
+            this.http.post(this.apiUrlGo + "/addNode", item, options)
+                .map(function (res) { return res.json().result; })
+                .map(function (item) { return _this.tree.push([item]); })
                 .catch(this.handleError)
                 .subscribe();
         }
@@ -55,28 +56,28 @@ var TreeService = (function () {
         var _this = this;
         var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         var options = new http_1.RequestOptions({ headers: headers });
-        var url = this.apiUrl + "/" + item.id;
+        var url = this.apiUrlGo + "/" + item.id;
         this.http.delete(url, options)
             .map(function (res) {
-            var index_level = +item.level;
-            var index = _this.items[index_level - 1].indexOf(item);
-            if (_this.items[index_level - 1] != _this.items[_this.items.length - 1]) {
+            var index_level = +item.Level;
+            var index = _this.tree[index_level - 1].indexOf(item);
+            if (_this.tree[index_level - 1] != _this.tree[_this.tree.length - 1]) {
                 var child_index = [];
-                for (var _i = 0, _a = _this.items; _i < _a.length; _i++) {
+                for (var _i = 0, _a = _this.tree; _i < _a.length; _i++) {
                     var sub_item = _a[_i];
                     for (var _b = 0, sub_item_1 = sub_item; _b < sub_item_1.length; _b++) {
                         var i = sub_item_1[_b];
-                        if (i.parent_id == item.id) {
+                        if (i.Parent == item.Id) {
                             child_index.push(sub_item.indexOf(i));
                         }
                     }
                 }
                 for (var _c = 0, child_index_1 = child_index; _c < child_index_1.length; _c++) {
                     var children = child_index_1[_c];
-                    _this.items[index_level].splice(0, 1);
+                    _this.tree[index_level].splice(0, 1);
                 }
             }
-            _this.items[index_level - 1].splice(index, 1);
+            _this.tree[index_level - 1].splice(index, 1);
         })
             .catch(this.handleError)
             .subscribe();

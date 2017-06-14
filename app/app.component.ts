@@ -16,10 +16,14 @@ export class AppComponent {
 	form = form;
 	title:string;
 	image:any;
+	tree:any;
 
-	constructor(private teeService: TreeService) {}
+	constructor(private teeService: TreeService) {
+		this.tree = [];
+	}
 
 	create() {
 		this.teeService.createItem(this.title, this.image);
 	}
+
 }

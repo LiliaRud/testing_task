@@ -12,17 +12,29 @@ import { TreeService } from '../shared/tree.service'
 })
 
 export class TreeComponent implements OnInit {
-	items:any;
+	tree:any;
 	form = form
 
 	constructor(private teeService: TreeService) {
-		this.items = [];
+		this.tree = [];
 	}
 
 	ngOnInit() {
-		this.teeService.getItems().subscribe(items => this.items = items);
-	}
-
+		this.teeService.getItems().subscribe(tree => {
+			let levels = [];
+			for (let i of tree) {		
+				levels.push(i.Level)
+			}
+			let max_level = Math.max.apply(null, levels);
+			for (let i = 1; i <= max_level; i++) {
+				this.tree.push([]);
+			}
+			for (let item of tree) {
+				this.tree[item.Level - 1].push(item)		
+			}
+		});
+	};
+	
 	delete(item:any) {
 		this.teeService.deleteItem(item);
 	}

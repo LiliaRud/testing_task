@@ -1,10 +1,10 @@
 "use strict";
 var Item = (function () {
-    function Item(title, image, parent_id, level) {
-        this.title = title;
-        this.image = image;
-        this.parent_id = parent_id;
-        this.level = level;
+    function Item(Title, Image, Parent, Level) {
+        this.Title = Title;
+        this.Image = Image;
+        this.Parent = Parent;
+        this.Level = Level;
     }
     return Item;
 }());

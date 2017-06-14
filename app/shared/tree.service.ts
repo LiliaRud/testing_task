@@ -10,16 +10,17 @@ import { Item, form } from './item';
 
 @Injectable()
 export class TreeService {
-	items:any = [];
+	tree:any = [];
 
-	private apiUrl = 'api/items';
-	private apiUrlGo = 'http://localhost:3050/getTree';
+	private apiUrl = 'api/tree';
+	private apiUrlGo = 'http://localhost:3050';
 
 	constructor(private http:Http) {}
 
-	getItems() {
-		return this.http.get(this.apiUrl)
-						.map(res => this.items = res.json().data)
+	getItems():Observable<Item[]> {
+		return this.http.get(`${this.apiUrlGo}/getTree`)
+						.map(res => res.json().result)
+						.map(item => this.tree = item)
 						.catch(this.handleError);
 	}
 
@@ -32,16 +33,16 @@ export class TreeService {
 		
 		let item = new Item(title, image, parent_id, level);
 
-		if (+level-1 < this.items.length) {
-			this.http.post(this.apiUrl, item, options)
-	 			 .map(res => res.json().data)
-	 			 .map(item => this.items[+level-1].push(item))
+		if (+level-1 < this.tree.length) {
+			this.http.post(`${this.apiUrlGo}/addNode`, item, options)
+	 			 .map(res => res.json().result)
+	 			 .map(item => this.tree[+level-1].push(item))
 	 			 .catch(this.handleError)
 	 			 .subscribe();
 		} else {
-			this.http.post(this.apiUrl, item, options)
-     			 .map(res => res.json().data)
-	 			 .map(item => this.items.push([item]))
+			this.http.post(`${this.apiUrlGo}/addNode`, item, options)
+     			 .map(res => res.json().result)
+	 			 .map(item => this.tree.push([item]))
 	 			 .catch(this.handleError)
 	 			 .subscribe();
 		}
@@ -52,28 +53,28 @@ export class TreeService {
 	deleteItem(item:any) {
 		let headers = new Headers({ 'Content-Type': 'application/json' });
 		let options = new RequestOptions({ headers });
-		let url = `${this.apiUrl}/${item.id}`;
+		let url = `${this.apiUrlGo}/${item.id}`;
 
 		this.http.delete(url, options)
 				 .map(res => {
 
-					let index_level = +item.level;
-					let index = this.items[index_level - 1].indexOf(item);
+					let index_level = +item.Level;
+					let index = this.tree[index_level - 1].indexOf(item);
 										
-					if (this.items[index_level - 1] != this.items[this.items.length - 1]) {
+					if (this.tree[index_level - 1] != this.tree[this.tree.length - 1]) {
 						let child_index:any = [];
-						for (let sub_item of this.items) {
+						for (let sub_item of this.tree) {
 							for (let i of sub_item) {								
-								if (i.parent_id == item.id) {
+								if (i.Parent == item.Id) {
 									child_index.push(sub_item.indexOf(i));
 								}
 							}
 						}
 						for (let children of child_index) {
-							this.items[index_level].splice(0, 1)
+							this.tree[index_level].splice(0, 1)
 						}
 					}
-					this.items[index_level - 1].splice(index, 1)
+					this.tree[index_level - 1].splice(index, 1)
 				 })
 				 .catch(this.handleError)
 				 .subscribe();

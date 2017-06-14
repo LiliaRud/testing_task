@@ -16,6 +16,7 @@ var AppComponent = (function () {
         this.teeService = teeService;
         this.header = 'Testing task';
         this.form = item_1.form;
+        this.tree = [];
     }
     AppComponent.prototype.create = function () {
         this.teeService.createItem(this.title, this.image);

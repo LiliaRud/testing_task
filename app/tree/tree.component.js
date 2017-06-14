@@ -15,12 +15,27 @@ var TreeComponent = (function () {
     function TreeComponent(teeService) {
         this.teeService = teeService;
         this.form = item_1.form;
-        this.items = [];
+        this.tree = [];
     }
     TreeComponent.prototype.ngOnInit = function () {
         var _this = this;
-        this.teeService.getItems().subscribe(function (items) { return _this.items = items; });
+        this.teeService.getItems().subscribe(function (tree) {
+            var levels = [];
+            for (var _i = 0, tree_1 = tree; _i < tree_1.length; _i++) {
+                var i = tree_1[_i];
+                levels.push(i.Level);
+            }
+            var max_level = Math.max.apply(null, levels);
+            for (var i = 1; i <= max_level; i++) {
+                _this.tree.push([]);
+            }
+            for (var _a = 0, tree_2 = tree; _a < tree_2.length; _a++) {
+                var item = tree_2[_a];
+                _this.tree[item.Level - 1].push(item);
+            }
+        });
     };
+    ;
     TreeComponent.prototype.delete = function (item) {
         this.teeService.deleteItem(item);
     };
