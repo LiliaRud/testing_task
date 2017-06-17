@@ -1,9 +1,9 @@
 <header class="header">{{header}}</header>
 <section class="main">
+	<div class="alert alert-danger" id="error" role="alert">Some error here.</div>
 	<div class="root">
 		<span>Add</span>
-		<button class="delete" id="root-delete">-</button>
-		<button class="add" id="root-add">+</button>
+		<button class="add" id="root-add" (click)="create_first_item()">+</button>
 	</div>
 	<div class="form-wrapper" [class.form-visible]="form.visible">
 		<form (ngSubmit)="create(); addItemForm.reset()" #addItemForm="ngForm" enctype="multipart/form-data">

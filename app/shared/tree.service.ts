@@ -12,7 +12,7 @@ import { Item, form } from './item';
 export class TreeService {
 	tree:any = [];
 
-	private apiUrlGo = 'http://localhost:3050/api';
+	private apiUrlGo = 'http://localhost:3050';
 
 	constructor(private http:Http) {}
 
@@ -29,31 +29,21 @@ export class TreeService {
 		let headers = new Headers({ 'Content-Type': 'multipart/form-data' });
 
 		return this.http.post(`${this.apiUrlGo}/addNode`, json, {headers: headers})
-						.catch(this.handleError)
-						.subscribe();
+						.catch(this.handleError);
 	}
 
 	deleteItem(item:any) {
-		// let headers = new Headers({ 'Content-Type': 'application/json' });
-		// let options = new RequestOptions({ headers });
-		// let url = `${this.apiUrlGo}/deleteNode`;
-
-		// this.http.delete(url, options)
-		// 		 .catch(this.handleError)
-		// 		 .subscribe();
-
-
 		let json = JSON.stringify(item);
 		let params = 'json=' + json
 		let headers = new Headers({ 'Content-Type': 'multipart/form-data' });
 
 		return this.http.post(`${this.apiUrlGo}/deleteNode`, json, {headers: headers})
-						.catch(this.handleError)
-						.subscribe();
+						.catch(this.handleError);
 	}
 
 	private handleError(error:any){
 		console.log('Error', error);
+		document.getElementById("error").style.display = "block";
 		return Observable.throw(error.message || error);
 	}
 }

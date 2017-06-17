@@ -17,26 +17,29 @@ var TreeComponent = (function () {
         this.form = item_1.form;
     }
     TreeComponent.prototype.delete = function (item) {
-        this.teeService.deleteItem(item);
-        function delete_items(item, tree) {
-            if (item.Level < tree.length) {
-                tree[item.Level].forEach(function (i, a, level) {
-                    if (i.Parent == item.Item_id) {
-                        delete_items(i, tree);
-                    }
+        var _this = this;
+        this.teeService.deleteItem(item).subscribe(function (res) {
+            function delete_items(item, tree) {
+                if (item.Level < tree.length) {
+                    tree[item.Level].forEach(function (i, a, level) {
+                        if (i.Parent == item.Item_id) {
+                            delete_items(i, tree);
+                        }
+                    });
+                }
+                var level = tree[item.Level - 1];
+                delete level[level.indexOf(item)];
+            }
+            delete_items(item, _this.tree);
+            for (var i = 0; i < _this.tree.length; i++) {
+                _this.tree[i] = _this.tree[i].filter(function (x) {
+                    return x !== undefined && x !== null;
                 });
             }
-            var level = tree[item.Level - 1];
-            console.log(level);
-            delete level[level.indexOf(item)];
-            console.log('delete parent', item.Item_id);
-        }
-        delete_items(item, this.tree);
-        for (var i = 0; i < this.tree.length; i++) {
-            this.tree[i] = this.tree[i].filter(function (x) {
-                return x !== undefined && x !== null;
-            });
-        }
+            if (item.Parent == 0) {
+                document.getElementById("root-add").style.display = "block";
+            }
+        });
     };
     TreeComponent.prototype.toggle_form = function (visible) {
         item_1.form.visible = !item_1.form.visible;

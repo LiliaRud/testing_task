@@ -17,3 +17,6 @@
 	right: 0;
 /*	transition: all 1s linear;*/
 }
+#error {
+	display: none;
+}

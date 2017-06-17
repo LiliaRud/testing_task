@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
 	private base64textString:String="";
 	img_type:string;
 	img_name:string;
+	item_id:number;
 
 
 	constructor(private teeService: TreeService) {
@@ -29,6 +30,11 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.teeService.getItems().subscribe(tree => {
+			if (tree.length == 0) {
+				document.getElementById("root-add").style.display = "block";
+			} else {
+				document.getElementById("root-add").style.display = "none";
+			}
 			let levels:any = [];
 
 			for (let i of tree) {		
@@ -41,56 +47,38 @@ export class AppComponent implements OnInit {
 			for (let item of tree) {
 				this.tree[item.Level - 1].push(item)
 			}
-		});
-	};
+		})
+	}
+
 	addImage(event:any){
-		// +++++++++++++++++++++++++++++++++++++VARIANT 1 +++++++++++++++++++++++++++++++++++++
       	var file = event.target.files[0];
       	this.img_type = file.type
       	this.img_name = file.name
-	 //  	var dataURL:any;
-  //   	if (file.type.substr(0,5) == 'image') {
-	 //    	var reader = new FileReader();
-		//     reader.onload = function(){
-		//      	dataURL = reader.result;
-		//       	var output = document.getElementById('output');
-	 //      			//output.src = dataURL;
-		// 		//img.push(new Blob([dataURL]));
-		//     console.log(dataURL)
-		// 		// return dataURL
-		//     };
-		//     reader.readAsDataURL(file);
-
-	   
-		// }
-
-		// +++++++++++++++++++++++++++++++++++++VARIANT 2 +++++++++++++++++++++++++++++++++++++
-	
-
-		      
-
-		    if (file) {
-		        var reader = new FileReader();
-
-		        reader.onload =this._handleReaderLoaded.bind(this);
-
-		        reader.readAsBinaryString(file);
-		    }
-		  
-
-
-
-	};
-	_handleReaderLoaded(readerEvt:any) {
+        if (file) {
+	        var reader = new FileReader();
+	        reader.onload =this.handleReaderLoaded.bind(this);
+	        reader.readAsBinaryString(file);
+	    }
+	}
+	handleReaderLoaded(readerEvt:any) {
      	var binaryString = readerEvt.target.result;
         this.base64textString= btoa(binaryString);
         this.image = ("data:" + this.img_type + ";base64," + btoa(binaryString))
-        //console.log(this.image);
     }
+
+    create_first_item() {
+    	this.form.visible = !this.form.visible;
+	 	let level = "1";
+	 	let parent = "0";
+	    document.getElementById('parent-input').setAttribute('value', parent);
+	 	document.getElementById('level-input').setAttribute('value', level);        
+    }
+
 	create() {
-			let parent = +(document.getElementById('parent-input').getAttribute('value'));	
-			let level = +(document.getElementById('level-input').getAttribute('value'));
-			
+		let parent = +(document.getElementById('parent-input').getAttribute('value'));	
+		let level = +(document.getElementById('level-input').getAttribute('value'));
+				
+		if (parent != 0){
 			let items_ids:any = [];
 	  		for (let item of this.tree) {
 	   			for (let i of item) {
@@ -98,7 +86,7 @@ export class AppComponent implements OnInit {
 	   			}
 	  		}
 	  		items_ids.sort();
-	  		let item_id = items_ids[items_ids.length - 1] + 1;
+	  		this.item_id = items_ids[items_ids.length - 1] + 1;
 
 	  		this.children = false;
 	  		if (level <= this.tree[level-1]) {
@@ -107,21 +95,29 @@ export class AppComponent implements OnInit {
 		  				this.children = true;
 		  			}
 		  		}	  			
-	  		}
+	  		}			
+		}
+		else {
+			this.item_id = 1;
+			this.children = false;
+		}
 
-	  		console.log(this.children)
+		let item = new Item(this.item_id, this.title, this.image, this.img_name, parent, level, this.children);
 
-			let item = new Item(item_id, this.title, this.image, this.img_name, parent, level, this.children);
-
-			this.teeService.createItem(item);
-
-            
+		this.teeService.createItem(item).subscribe(res => {
 			if (+level-1 < this.tree.length) {
-				this.tree[+level-1].push(item)	
+				this.tree[level-1].push(item)	
 			} else {			
 				this.tree.push([item])
 			}
-			form.visible = false;		
+
+			if (item.Parent == 0) {
+				document.getElementById("root-add").style.display = "none";
+			}
+			
+		});
+
+		form.visible = false;		
 	}
 
 }

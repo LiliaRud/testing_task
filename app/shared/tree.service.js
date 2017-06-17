@@ -18,7 +18,7 @@ var TreeService = (function () {
     function TreeService(http) {
         this.http = http;
         this.tree = [];
-        this.apiUrlGo = 'http://localhost:3050/api';
+        this.apiUrlGo = 'http://localhost:3050';
     }
     TreeService.prototype.getItems = function () {
         var _this = this;
@@ -32,25 +32,18 @@ var TreeService = (function () {
         var params = 'json=' + json;
         var headers = new http_1.Headers({ 'Content-Type': 'multipart/form-data' });
         return this.http.post(this.apiUrlGo + "/addNode", json, { headers: headers })
-            .catch(this.handleError)
-            .subscribe();
+            .catch(this.handleError);
     };
     TreeService.prototype.deleteItem = function (item) {
-        // let headers = new Headers({ 'Content-Type': 'application/json' });
-        // let options = new RequestOptions({ headers });
-        // let url = `${this.apiUrlGo}/deleteNode`;
-        // this.http.delete(url, options)
-        // 		 .catch(this.handleError)
-        // 		 .subscribe();
         var json = JSON.stringify(item);
         var params = 'json=' + json;
         var headers = new http_1.Headers({ 'Content-Type': 'multipart/form-data' });
         return this.http.post(this.apiUrlGo + "/deleteNode", json, { headers: headers })
-            .catch(this.handleError)
-            .subscribe();
+            .catch(this.handleError);
     };
     TreeService.prototype.handleError = function (error) {
         console.log('Error', error);
+        document.getElementById("error").style.display = "block";
         return Observable_1.Observable.throw(error.message || error);
     };
     TreeService = __decorate([

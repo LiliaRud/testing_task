@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"net/http"
+	"os"
 	
 	"encoding/base64"
     "strings"
@@ -14,7 +15,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	//"github.com/gin-contrib/static"
 )
 
 func main() {
@@ -24,7 +24,6 @@ func main() {
 		fmt.Print(err.Error())
 	}
 	defer db.Close()
-	// make sure connection is available
 	err = db.Ping()
 	if err != nil {
 		fmt.Print(err.Error())
@@ -53,69 +52,76 @@ func main() {
 	}
 
 	router := gin.Default()
-	http.Handle("/", http.FileServer(http.Dir("./static")))
-	//router.Use(static.Serve("/", static.LocalFile("./public", true)))
-	//router.StaticFile("/", "./images/")
 
-	api := router.Group("/api")
-	{
-	    api.GET("/getTree", func(c *gin.Context) {
-			var (
-				item  Item
-				items []Item
-			)
-			rows, err := db.Query("SELECT node.id, node.item_id, node.title, node.image, node.parent, node.level, node.lft, node.rgt FROM table_2 AS node;")
-			
+    router.GET("/getTree", func(c *gin.Context) {
+		var (
+			item  Item
+			items []Item
+		)
+		rows, err := db.Query("SELECT node.id, node.item_id, node.title, node.image, node.parent, node.level, node.lft, node.rgt FROM table_2 AS node;")
+		
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+		for rows.Next() {
+			err = rows.Scan(&item.Id, &item.Item_id, &item.Title, &item.Image, &item.Parent, &item.Level, &item.Left, &item.Right)
+			items = append(items, item)
 			if err != nil {
 				fmt.Print(err.Error())
 			}
-			for rows.Next() {
-				err = rows.Scan(&item.Id, &item.Item_id, &item.Title, &item.Image, &item.Parent, &item.Level, &item.Left, &item.Right)
-				items = append(items, item)
-				if err != nil {
-					fmt.Print(err.Error())
-				}
-			}
-			defer rows.Close()
-			c.JSON(http.StatusOK, gin.H{
-				"result": items,
-				"count":  len(items),
-			})
-
+		}
+		defer rows.Close()
+		c.JSON(http.StatusOK, gin.H{
+			"result": items,
+			"count":  len(items),
 		})
-		// POST new person details
-		api.POST("/addNode", func(c *gin.Context) {
-			//var buffer bytes.Buffer
-			var json ItemPost
 
-			c.BindJSON(&json)
-			Item_id := json.Item_id
-			Title := json.Title
-			Image := json.Image
-			Image_name := json.Image_name
-			Parent := json.Parent
-			Level := json.Level
-			Children := json.Children
-			// Left := json.Left
-			// Right := json.Right
+	})
 
-			idx := strings.Index(Image, ";base64,")
-		    reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(Image[idx+8:]))
-		    buff := bytes.Buffer{}
-		    _, err := buff.ReadFrom(reader)
-		    if err != nil {
-		        fmt.Print(err.Error())
-		    }
+	router.POST("/addNode", func(c *gin.Context) {
+		var json ItemPost
 
-			Path_to_image, err :=	filepath.Abs("./static/" + Image_name)	
-		    ioutil.WriteFile(Path_to_image, buff.Bytes(), 0644)
-		    //router.StaticFile("/", Path_to_image)
-		    //router.Use(static.Serve("/", static.LocalFile(Path_to_image, false)))
-			//Path_to_image := "http://localhost:3050/images/" + Image_name
-	    	if err != nil {
-	           fmt.Print(err.Error())
-	    	}
+		c.BindJSON(&json)
+		Item_id := json.Item_id
+		Title := json.Title
+		Image := json.Image
+		Image_name := json.Image_name
+		Parent := json.Parent
+		Level := json.Level
+		Children := json.Children
+		
+		idx := strings.Index(Image, ";base64,")
+	    reader := base64.NewDecoder(base64.StdEncoding, strings.NewReader(Image[idx+8:]))
+	    buff := bytes.Buffer{}
+	    _, err := buff.ReadFrom(reader)
+	    if err != nil {
+	        fmt.Print(err.Error())
+	    }
 
+		Path_to_save, err := filepath.Abs("./images/" + Image_name)	
+	    ioutil.WriteFile(Path_to_save, buff.Bytes(), 0644)
+
+	    Path_to_image := "http://localhos:3050/images/" + Image_name
+
+    	if err != nil {
+           fmt.Print(err.Error())
+    	}
+
+    	if Parent == 0 {
+
+    		stmt, err := db.Prepare("INSERT INTO table_2 (item_id, title, image, parent, level, lft, rgt) VALUES(?,?,?,?,?,?,?);")
+			if err != nil {
+				fmt.Print(err.Error())
+			}
+
+			_, err = stmt.Exec(Item_id, Title, Path_to_image, Parent, Level, 1, 2)
+			if err != nil {
+				fmt.Print(err.Error())
+			}
+
+			defer stmt.Close()
+
+    	} else {
 
 			if Children == true {
 				var rgt int
@@ -135,7 +141,6 @@ func main() {
 				}
 
 				defer stmt.Close()
-
 			} else {
 				var lft int
 				db.QueryRow("SELECT lft FROM table_2 WHERE item_id= ?;", Parent).Scan(&lft)
@@ -155,48 +160,45 @@ func main() {
 
 				defer stmt.Close()
 			}
-			c.JSON(200, gin.H{
-				"message": fmt.Sprintf("%s successfully created", Title),
-			})
+    	}
+
+		c.JSON(200, gin.H{
+			"message": fmt.Sprintf("%s successfully created", Title),
 		})
-		// Delete resources
-		api.POST("/deleteNode", func(c *gin.Context) {
-			var json ItemPost
+	})
 
-			c.BindJSON(&json)
-			Item_id := json.Item_id
+	router.POST("/deleteNode", func(c *gin.Context) {
+		var json ItemPost
 
-			// stmt, err := db.Prepare("DELETE FROM table_2 WHERE item_id= ?;")
-			// if err != nil {
-			// 	fmt.Print(err.Error())
-			// }
-			// _, err = stmt.Exec(Item_id)
-			// if err != nil {
-			// 	fmt.Print(err.Error())
-			// }
+		c.BindJSON(&json)
+		Item_id := json.Item_id
 
-			// defer stmt.Close()
+		var lft int
+		var rgt int
+		var image string
+		
+		db.QueryRow("SELECT image FROM table_2 WHERE item_id= ?;", Item_id).Scan(&image)
 
+		str, err := filepath.Abs("." + image[20:])
+		err = os.Remove(str)	
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+		
+		db.QueryRow("SELECT lft, rgt FROM table_2 WHERE item_id= ?;", Item_id).Scan(&lft, &rgt)
 
-			var lft int
-			var rgt int
-			
-			db.QueryRow("SELECT lft, rgt FROM table_2 WHERE item_id= ?;", Item_id).Scan(&lft, &rgt)
+		width := rgt - lft + 1
 
-			width := rgt - lft + 1
+		db.Exec("DELETE FROM table_2 WHERE lft BETWEEN ? AND ?;", lft, rgt)
+		db.Exec("UPDATE table_2 SET rgt = rgt - ? WHERE rgt > ?;", width, rgt)
+		db.Exec("UPDATE table_2 SET lft = lft - ? WHERE lft > ?;", width, rgt)
 
-			db.Exec("DELETE FROM table_2 WHERE lft BETWEEN ? AND ?;", lft, rgt)
-			db.Exec("UPDATE table_2 SET rgt = rgt - ? WHERE rgt > ?;", width, rgt)
-			db.Exec("UPDATE table_2 SET lft = lft - ? WHERE lft > ?;", width, rgt)
-
-			c.JSON(200, gin.H{
-				"message": fmt.Sprintf("Successfully deleted user: %d", Item_id),
-			})
-
-
-
+		c.JSON(200, gin.H{
+			"message": fmt.Sprintf("Successfully deleted user: %d", Item_id),
 		})
-	}
+	})
+
+	router.Static("/images", "./images") 
 
 	router.Run(":3050")
 }
