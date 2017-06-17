@@ -15,33 +15,36 @@ var TreeComponent = (function () {
     function TreeComponent(teeService) {
         this.teeService = teeService;
         this.form = item_1.form;
-        this.tree = [];
     }
-    TreeComponent.prototype.ngOnInit = function () {
-        var _this = this;
-        this.teeService.getItems().subscribe(function (tree) {
-            var levels = [];
-            for (var _i = 0, tree_1 = tree; _i < tree_1.length; _i++) {
-                var i = tree_1[_i];
-                levels.push(i.Level);
-            }
-            var max_level = Math.max.apply(null, levels);
-            for (var i = 1; i <= max_level; i++) {
-                _this.tree.push([]);
-            }
-            for (var _a = 0, tree_2 = tree; _a < tree_2.length; _a++) {
-                var item = tree_2[_a];
-                _this.tree[item.Level - 1].push(item);
-            }
-        });
-    };
-    ;
     TreeComponent.prototype.delete = function (item) {
         this.teeService.deleteItem(item);
+        var index;
+        for (var _i = 0, _a = this.tree; _i < _a.length; _i++) {
+            var level = _a[_i];
+            // for (let i of level) {
+            // 	if (item.Item_id == i.Parent) {
+            // 		delete level[level.indexOf(i)]
+            // 	}
+            // }
+            delete level[level.indexOf(item)];
+        }
+        for (var i = 0; i < this.tree.length; i++) {
+            this.tree[i] = this.tree[i].filter(function (x) {
+                return x !== undefined && x !== null;
+            });
+        }
     };
     TreeComponent.prototype.toggle_form = function (visible) {
         item_1.form.visible = !item_1.form.visible;
     };
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], TreeComponent.prototype, "tree", void 0);
+    __decorate([
+        core_1.Input(), 
+        __metadata('design:type', Object)
+    ], TreeComponent.prototype, "build_tree", void 0);
     TreeComponent = __decorate([
         core_1.Component({
             moduleId: module.id,

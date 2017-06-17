@@ -1,9 +1,9 @@
 <div class="item">
-	<img src="{{ item.image }}" alt="{{ item.title }}">
+	<img src="{{ item.Image }}" alt="{{ item.Title }}">
 	<p class="title"><strong>{{ item.Title }}</strong></p>
-	<p>ID: <strong>{{ item.Id }}</strong></p>
+	<p>ID: <strong>{{ item.Item_id }}</strong></p>
 	<p>PARENT: <strong>{{ item.Parent }}</strong></p>
 	<p>LEVEL: <strong>{{ item.Level }}</strong></p>
 	<button class="delete" (click)="onDelete()">-</button>
-	<button class="add" (click)="onToggleForm()" attr.data-level="{{item.level}}" attr.data-id="{{item.id}}">+</button>
+	<button class="add" (click)="onToggleForm()" attr.data-level="{{item.Level}}" attr.data-id="{{item.Item_id}}">+</button>
 </div>

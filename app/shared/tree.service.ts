@@ -12,8 +12,7 @@ import { Item, form } from './item';
 export class TreeService {
 	tree:any = [];
 
-	private apiUrl = 'api/tree';
-	private apiUrlGo = 'http://localhost:3050';
+	private apiUrlGo = 'http://localhost:3050/api';
 
 	constructor(private http:Http) {}
 
@@ -24,60 +23,33 @@ export class TreeService {
 						.catch(this.handleError);
 	}
 
-	createItem(title:string, image:any) {	
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
+	createItem(item:any) {
+		let json = JSON.stringify(item);
+		let params = 'json=' + json
+		let headers = new Headers({ 'Content-Type': 'multipart/form-data' });
 
-		let parent_id = +(document.getElementById('parent-input').getAttribute('value'));	
-		let level = +(document.getElementById('level-input').getAttribute('value'));
-		
-		let item = new Item(title, image, parent_id, level);
-
-		if (+level-1 < this.tree.length) {
-			this.http.post(`${this.apiUrlGo}/addNode`, item, options)
-	 			 .map(res => res.json().result)
-	 			 .map(item => this.tree[+level-1].push(item))
-	 			 .catch(this.handleError)
-	 			 .subscribe();
-		} else {
-			this.http.post(`${this.apiUrlGo}/addNode`, item, options)
-     			 .map(res => res.json().result)
-	 			 .map(item => this.tree.push([item]))
-	 			 .catch(this.handleError)
-	 			 .subscribe();
-		}
-	 	
-	 	form.visible = false;
+		return this.http.post(`${this.apiUrlGo}/addNode`, json, {headers: headers})
+						.catch(this.handleError)
+						.subscribe();
 	}
 
 	deleteItem(item:any) {
-		let headers = new Headers({ 'Content-Type': 'application/json' });
-		let options = new RequestOptions({ headers });
-		let url = `${this.apiUrlGo}/${item.id}`;
+		// let headers = new Headers({ 'Content-Type': 'application/json' });
+		// let options = new RequestOptions({ headers });
+		// let url = `${this.apiUrlGo}/deleteNode`;
 
-		this.http.delete(url, options)
-				 .map(res => {
+		// this.http.delete(url, options)
+		// 		 .catch(this.handleError)
+		// 		 .subscribe();
 
-					let index_level = +item.Level;
-					let index = this.tree[index_level - 1].indexOf(item);
-										
-					if (this.tree[index_level - 1] != this.tree[this.tree.length - 1]) {
-						let child_index:any = [];
-						for (let sub_item of this.tree) {
-							for (let i of sub_item) {								
-								if (i.Parent == item.Id) {
-									child_index.push(sub_item.indexOf(i));
-								}
-							}
-						}
-						for (let children of child_index) {
-							this.tree[index_level].splice(0, 1)
-						}
-					}
-					this.tree[index_level - 1].splice(index, 1)
-				 })
-				 .catch(this.handleError)
-				 .subscribe();
+
+		let json = JSON.stringify(item);
+		let params = 'json=' + json
+		let headers = new Headers({ 'Content-Type': 'multipart/form-data' });
+
+		return this.http.post(`${this.apiUrlGo}/deleteNode`, json, {headers: headers})
+						.catch(this.handleError)
+						.subscribe();
 	}
 
 	private handleError(error:any){

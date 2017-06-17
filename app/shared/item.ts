@@ -1,8 +1,10 @@
 export class Item {
-	id: number;
+	Id: number;
 
-	constructor(public Title:string,
+	constructor(public Item_id:number,
+				public Title:string,
 				public Image:any,
+				public Image_name:string,
 				public Parent:number,
 				public Level:number) {}
 };

@@ -14,13 +14,11 @@ var Observable_1 = require('rxjs/Observable');
 require('rxjs/add/operator/map');
 require('rxjs/add/operator/catch');
 require('rxjs/add/observable/throw');
-var item_1 = require('./item');
 var TreeService = (function () {
     function TreeService(http) {
         this.http = http;
         this.tree = [];
-        this.apiUrl = 'api/tree';
-        this.apiUrlGo = 'http://localhost:3050';
+        this.apiUrlGo = 'http://localhost:3050/api';
     }
     TreeService.prototype.getItems = function () {
         var _this = this;
@@ -29,56 +27,25 @@ var TreeService = (function () {
             .map(function (item) { return _this.tree = item; })
             .catch(this.handleError);
     };
-    TreeService.prototype.createItem = function (title, image) {
-        var _this = this;
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        var options = new http_1.RequestOptions({ headers: headers });
-        var parent_id = +(document.getElementById('parent-input').getAttribute('value'));
-        var level = +(document.getElementById('level-input').getAttribute('value'));
-        var item = new item_1.Item(title, image, parent_id, level);
-        if (+level - 1 < this.tree.length) {
-            this.http.post(this.apiUrlGo + "/addNode", item, options)
-                .map(function (res) { return res.json().result; })
-                .map(function (item) { return _this.tree[+level - 1].push(item); })
-                .catch(this.handleError)
-                .subscribe();
-        }
-        else {
-            this.http.post(this.apiUrlGo + "/addNode", item, options)
-                .map(function (res) { return res.json().result; })
-                .map(function (item) { return _this.tree.push([item]); })
-                .catch(this.handleError)
-                .subscribe();
-        }
-        item_1.form.visible = false;
+    TreeService.prototype.createItem = function (item) {
+        var json = JSON.stringify(item);
+        var params = 'json=' + json;
+        var headers = new http_1.Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post(this.apiUrlGo + "/addNode", json, { headers: headers })
+            .catch(this.handleError)
+            .subscribe();
     };
     TreeService.prototype.deleteItem = function (item) {
-        var _this = this;
-        var headers = new http_1.Headers({ 'Content-Type': 'application/json' });
-        var options = new http_1.RequestOptions({ headers: headers });
-        var url = this.apiUrlGo + "/" + item.id;
-        this.http.delete(url, options)
-            .map(function (res) {
-            var index_level = +item.Level;
-            var index = _this.tree[index_level - 1].indexOf(item);
-            if (_this.tree[index_level - 1] != _this.tree[_this.tree.length - 1]) {
-                var child_index = [];
-                for (var _i = 0, _a = _this.tree; _i < _a.length; _i++) {
-                    var sub_item = _a[_i];
-                    for (var _b = 0, sub_item_1 = sub_item; _b < sub_item_1.length; _b++) {
-                        var i = sub_item_1[_b];
-                        if (i.Parent == item.Id) {
-                            child_index.push(sub_item.indexOf(i));
-                        }
-                    }
-                }
-                for (var _c = 0, child_index_1 = child_index; _c < child_index_1.length; _c++) {
-                    var children = child_index_1[_c];
-                    _this.tree[index_level].splice(0, 1);
-                }
-            }
-            _this.tree[index_level - 1].splice(index, 1);
-        })
+        // let headers = new Headers({ 'Content-Type': 'application/json' });
+        // let options = new RequestOptions({ headers });
+        // let url = `${this.apiUrlGo}/deleteNode`;
+        // this.http.delete(url, options)
+        // 		 .catch(this.handleError)
+        // 		 .subscribe();
+        var json = JSON.stringify(item);
+        var params = 'json=' + json;
+        var headers = new http_1.Headers({ 'Content-Type': 'multipart/form-data' });
+        return this.http.post(this.apiUrlGo + "/deleteNode", json, { headers: headers })
             .catch(this.handleError)
             .subscribe();
     };
