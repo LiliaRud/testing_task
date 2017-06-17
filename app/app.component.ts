@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
 	header:string = 'Testing task';
 	form = form;
 	title:string;
+	children:boolean;
 	image:any = [];
 	tree:any;
 	private base64textString:String="";
@@ -97,12 +98,20 @@ export class AppComponent implements OnInit {
 	   			}
 	  		}
 	  		items_ids.sort();
-
 	  		let item_id = items_ids[items_ids.length - 1] + 1;
-			let item = new Item(item_id, this.title, this.image, this.img_name, parent, level);
 
+	  		this.children = false;
+	  		if (level <= this.tree[level-1]) {
+		  		for (let i of this.tree[level - 1]) {
+		  			if (parent == i.Parent) {
+		  				this.children = true;
+		  			}
+		  		}	  			
+	  		}
 
-			console.log(item)
+	  		console.log(this.children)
+
+			let item = new Item(item_id, this.title, this.image, this.img_name, parent, level, this.children);
 
 			this.teeService.createItem(item);
 
@@ -113,7 +122,6 @@ export class AppComponent implements OnInit {
 				this.tree.push([item])
 			}
 			form.visible = false;		
-
 	}
 
 }

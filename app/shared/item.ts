@@ -6,7 +6,8 @@ export class Item {
 				public Image:any,
 				public Image_name:string,
 				public Parent:number,
-				public Level:number) {}
+				public Level:number,
+				public children:boolean) {}
 };
 
 export const form = {

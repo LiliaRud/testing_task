@@ -84,8 +84,17 @@ var AppComponent = (function () {
         }
         items_ids.sort();
         var item_id = items_ids[items_ids.length - 1] + 1;
-        var item = new item_1.Item(item_id, this.title, this.image, this.img_name, parent, level);
-        console.log(item);
+        this.children = false;
+        if (level <= this.tree[level - 1]) {
+            for (var _c = 0, _d = this.tree[level - 1]; _c < _d.length; _c++) {
+                var i = _d[_c];
+                if (parent == i.Parent) {
+                    this.children = true;
+                }
+            }
+        }
+        console.log(this.children);
+        var item = new item_1.Item(item_id, this.title, this.image, this.img_name, parent, level, this.children);
         this.teeService.createItem(item);
         if (+level - 1 < this.tree.length) {
             this.tree[+level - 1].push(item);

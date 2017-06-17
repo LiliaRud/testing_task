@@ -13,23 +13,29 @@ import { TreeService } from '../shared/tree.service'
 
 export class TreeComponent {
 	@Input() tree:any;
-	@Input() build_tree:any;
 
 	form = form
+
 
 	constructor(private teeService: TreeService) {}
 	
 	delete(item:any) {
 		this.teeService.deleteItem(item);
-		let index:number;
-		for (let level of this.tree) {
-			// for (let i of level) {
-			// 	if (item.Item_id == i.Parent) {
-			// 		delete level[level.indexOf(i)]
-			// 	}
-			// }
-			delete level[level.indexOf(item)]
+		function delete_items(item:any, tree:any) {
+			if (item.Level < tree.length) {
+				tree[item.Level].forEach( function(i:any, a:any, level:any){
+					if (i.Parent == item.Item_id) {
+						delete_items(i, tree)
+					}
+				})
+			}
+			let level = tree[item.Level - 1];
+			console.log(level)
+			delete level[level.indexOf(item)];
+			console.log('delete parent', item.Item_id)
 		}
+
+		delete_items(item, this.tree)
 		for (let i = 0; i < this.tree.length; i++) {
 			this.tree[i] = this.tree[i].filter(function(x:any) {
 			    return x !== undefined && x !== null; 

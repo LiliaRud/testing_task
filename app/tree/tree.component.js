@@ -18,16 +18,20 @@ var TreeComponent = (function () {
     }
     TreeComponent.prototype.delete = function (item) {
         this.teeService.deleteItem(item);
-        var index;
-        for (var _i = 0, _a = this.tree; _i < _a.length; _i++) {
-            var level = _a[_i];
-            // for (let i of level) {
-            // 	if (item.Item_id == i.Parent) {
-            // 		delete level[level.indexOf(i)]
-            // 	}
-            // }
+        function delete_items(item, tree) {
+            if (item.Level < tree.length) {
+                tree[item.Level].forEach(function (i, a, level) {
+                    if (i.Parent == item.Item_id) {
+                        delete_items(i, tree);
+                    }
+                });
+            }
+            var level = tree[item.Level - 1];
+            console.log(level);
             delete level[level.indexOf(item)];
+            console.log('delete parent', item.Item_id);
         }
+        delete_items(item, this.tree);
         for (var i = 0; i < this.tree.length; i++) {
             this.tree[i] = this.tree[i].filter(function (x) {
                 return x !== undefined && x !== null;
@@ -41,10 +45,6 @@ var TreeComponent = (function () {
         core_1.Input(), 
         __metadata('design:type', Object)
     ], TreeComponent.prototype, "tree", void 0);
-    __decorate([
-        core_1.Input(), 
-        __metadata('design:type', Object)
-    ], TreeComponent.prototype, "build_tree", void 0);
     TreeComponent = __decorate([
         core_1.Component({
             moduleId: module.id,
