@@ -46,6 +46,6 @@ export class TreeComponent {
 	}
 		
 	toggle_form(visible:boolean) {
-		form.visible = !form.visible;
+		form.visible = true;
 	}
 }

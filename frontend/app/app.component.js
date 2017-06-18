@@ -17,30 +17,29 @@ var AppComponent = (function () {
         this.header = 'Testing task';
         this.form = item_1.form;
         this.image = [];
-        this.base64textString = "";
         this.tree = [];
     }
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
         this.teeService.getItems().subscribe(function (tree) {
-            if (tree.length == 0) {
+            if (tree == null) {
                 document.getElementById("root-add").style.display = "block";
             }
             else {
                 document.getElementById("root-add").style.display = "none";
-            }
-            var levels = [];
-            for (var _i = 0, tree_1 = tree; _i < tree_1.length; _i++) {
-                var i = tree_1[_i];
-                levels.push(i.Level);
-            }
-            var max_level = Math.max.apply(null, levels);
-            for (var i = 1; i <= max_level; i++) {
-                _this.tree.push([]);
-            }
-            for (var _a = 0, tree_2 = tree; _a < tree_2.length; _a++) {
-                var item = tree_2[_a];
-                _this.tree[item.Level - 1].push(item);
+                var levels = [];
+                for (var _i = 0, tree_1 = tree; _i < tree_1.length; _i++) {
+                    var i = tree_1[_i];
+                    levels.push(i.Level);
+                }
+                var max_level = Math.max.apply(null, levels);
+                for (var i = 1; i <= max_level; i++) {
+                    _this.tree.push([]);
+                }
+                for (var _a = 0, tree_2 = tree; _a < tree_2.length; _a++) {
+                    var item = tree_2[_a];
+                    _this.tree[item.Level - 1].push(item);
+                }
             }
         });
     };
@@ -48,7 +47,7 @@ var AppComponent = (function () {
         var file = event.target.files[0];
         this.img_type = file.type;
         this.img_name = file.name;
-        if (file) {
+        if (this.img_type.substr(0, 5) == "image") {
             var reader = new FileReader();
             reader.onload = this.handleReaderLoaded.bind(this);
             reader.readAsBinaryString(file);
@@ -56,11 +55,10 @@ var AppComponent = (function () {
     };
     AppComponent.prototype.handleReaderLoaded = function (readerEvt) {
         var binaryString = readerEvt.target.result;
-        this.base64textString = btoa(binaryString);
         this.image = ("data:" + this.img_type + ";base64," + btoa(binaryString));
     };
     AppComponent.prototype.create_first_item = function () {
-        this.form.visible = !this.form.visible;
+        this.form.visible = true;
         var level = "1";
         var parent = "0";
         document.getElementById('parent-input').setAttribute('value', parent);
@@ -107,6 +105,9 @@ var AppComponent = (function () {
                 document.getElementById("root-add").style.display = "none";
             }
         });
+        item_1.form.visible = false;
+    };
+    AppComponent.prototype.close_form = function () {
         item_1.form.visible = false;
     };
     AppComponent = __decorate([

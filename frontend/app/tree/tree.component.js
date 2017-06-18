@@ -42,7 +42,7 @@ var TreeComponent = (function () {
         });
     };
     TreeComponent.prototype.toggle_form = function (visible) {
-        item_1.form.visible = !item_1.form.visible;
+        item_1.form.visible = true;
     };
     __decorate([
         core_1.Input(), 

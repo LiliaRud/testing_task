@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
 	children:boolean;
 	image:any = [];
 	tree:any;
-	private base64textString:String="";
 	img_type:string;
 	img_name:string;
 	item_id:number;
@@ -30,22 +29,21 @@ export class AppComponent implements OnInit {
 
 	ngOnInit() {
 		this.teeService.getItems().subscribe(tree => {
-			if (tree.length == 0) {
+			if (tree == null) {
 				document.getElementById("root-add").style.display = "block";
 			} else {
 				document.getElementById("root-add").style.display = "none";
-			}
-			let levels:any = [];
-
-			for (let i of tree) {		
-				levels.push(i.Level)
-			}
-			let max_level = Math.max.apply(null, levels);
-			for (let i = 1; i <= max_level; i++) {
-				this.tree.push([]);
-			}
-			for (let item of tree) {
-				this.tree[item.Level - 1].push(item)
+				let levels:any = [];
+				for (let i of tree) {		
+					levels.push(i.Level)
+				}
+				let max_level = Math.max.apply(null, levels);
+				for (let i = 1; i <= max_level; i++) {
+					this.tree.push([]);
+				}
+				for (let item of tree) {
+					this.tree[item.Level - 1].push(item)
+				}				
 			}
 		})
 	}
@@ -54,7 +52,7 @@ export class AppComponent implements OnInit {
       	var file = event.target.files[0];
       	this.img_type = file.type
       	this.img_name = file.name
-        if (file) {
+        if (this.img_type.substr(0, 5) == "image") {
 	        var reader = new FileReader();
 	        reader.onload =this.handleReaderLoaded.bind(this);
 	        reader.readAsBinaryString(file);
@@ -62,12 +60,11 @@ export class AppComponent implements OnInit {
 	}
 	handleReaderLoaded(readerEvt:any) {
      	var binaryString = readerEvt.target.result;
-        this.base64textString= btoa(binaryString);
         this.image = ("data:" + this.img_type + ";base64," + btoa(binaryString))
     }
 
     create_first_item() {
-    	this.form.visible = !this.form.visible;
+    	this.form.visible = true;
 	 	let level = "1";
 	 	let parent = "0";
 	    document.getElementById('parent-input').setAttribute('value', parent);
@@ -118,6 +115,10 @@ export class AppComponent implements OnInit {
 		});
 
 		form.visible = false;		
+	}
+
+	close_form() {
+		form.visible = false;
 	}
 
 }

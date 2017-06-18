@@ -4,6 +4,6 @@
 	<p>ID: <strong>{{ item.Item_id }}</strong></p>
 	<p>PARENT: <strong>{{ item.Parent }}</strong></p>
 	<p>LEVEL: <strong>{{ item.Level }}</strong></p>
-	<button class="delete" (click)="onDelete()">-</button>
-	<button class="add" (click)="onToggleForm()" attr.data-level="{{item.Level}}" attr.data-id="{{item.Item_id}}">+</button>
+	<button class="delete btn btn-info" (click)="onDelete()">Delete item</button>
+	<button class="add btn btn-primary" (click)="onToggleForm()" attr.data-level="{{item.Level}}" attr.data-id="{{item.Item_id}}">Add new item</button>
 </div>

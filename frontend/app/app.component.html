@@ -1,11 +1,11 @@
-<header class="header">{{header}}</header>
-<section class="main">
+<div class="header">{{header}}</div>
+<div class="main">
 	<div class="alert alert-danger" id="error" role="alert">Some error here.</div>
 	<div class="root">
-		<span>Add</span>
-		<button class="add" id="root-add" (click)="create_first_item()">+</button>
+		<button class="add btn btn-default" id="root-add" (click)="create_first_item()">Add first item</button>
 	</div>
 	<div class="form-wrapper" [class.form-visible]="form.visible">
+		<button class="close" (click)=close_form()>&#215;</button>
 		<form (ngSubmit)="create(); addItemForm.reset()" #addItemForm="ngForm" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="title-input">Add title</label>
@@ -13,13 +13,13 @@
 			</div>
 			<div class="form-group">
 				<label for="image-input">Add image</label>
-				<input type="file" name="image" id="image-input" placeholder="Add image" (change)="addImage($event)" required>
+				<input type="file" class="form-control" name="image" id="image-input" placeholder="Add image" (change)="addImage($event)" required>
 			</div> 
 			<input type="hidden" name="parent_id" id="parent-input" required>
 			<input type="hidden" name="level" id="level-input" required>
-			<input type="submit" class="btn btn-default">
+			<input type="submit" class="btn btn-info">
 		</form>
 	</div>
 	<img id="output" src=""/>
 	<tree [tree]="tree"></tree>
-</section>
+</div>

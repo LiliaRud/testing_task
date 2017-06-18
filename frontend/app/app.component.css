@@ -1,0 +1,42 @@
+.header {
+	background-color: #508ebf;
+	font-size: 30px;
+	font-weight: bold;
+	color: #fff;
+	text-align: center;
+}
+#root-add {
+    display: block;
+	margin: 20px auto;
+}
+.main {
+	position: relative;
+	overflow-x: hidden;
+}
+.form-wrapper {
+	position: fixed;
+	right: -400px;
+	top: 50px;
+    transition: all 1s linear;
+    height: 300px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border-radius: 10px;
+}
+.form-visible {
+	right: 20px;
+	transition: all 1s linear;
+}
+.form-wrapper>form {
+	margin-top: 15px;
+}
+.form-wrapper>form>input[type="submit"] {
+	margin-top: 20px;
+}
+.form-wrapper>.close {
+	float: right;
+}
+#error {
+	display: none;
+}
